@@ -320,12 +320,25 @@ def car_rent_create(request):
     return render(request, 'listings/car_form.html', {'form': form})
 @login_required
 def rent_car_page(request):
+    brand_query = request.GET.get('brand', '')
+    price_per_day_query = request.GET.get('price_per_day', '')
+
+    # Filter cars for rent based on search criteria
     cars_for_rent = CarForRent.objects.all()
     
+    if brand_query:
+        # Adjust 'name' based on the field in the Brand model that stores the brand name
+        cars_for_rent = cars_for_rent.filter(brand__name__icontains=brand_query)
     
+    if price_per_day_query:
+        try:
+            price_per_day = float(price_per_day_query)
+            cars_for_rent = cars_for_rent.filter(price_per_day__lte=price_per_day)
+        except ValueError:
+            pass  # Ignore invalid price input
+
     return render(request, 'listings/rent_car_page.html', {
         'cars_for_rent': cars_for_rent,
-        
     })
 def rent_car_detail(request, pk):
     car = get_object_or_404(CarForRent, pk=pk)
