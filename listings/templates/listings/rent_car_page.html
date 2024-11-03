@@ -1,0 +1,14 @@
+{% extends "listings/base.html" %}
+
+{% block content %}
+<div class="container">
+    <h1>Cars for Rent</h1>
+    <ul class="list-group">
+        {% for car in cars_for_rent %}
+        <li class="list-group-item">
+            <a href="{% url 'rent_car_detail' car.pk %}">{{ car.name }}</a> - ${{ car.price_per_day }}/day
+        </li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}

@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block content %}
+    <h1>{{ car.name }}</h1>
+    <img src="{{ car.front_image.url }}" alt="{{ car.name }}">
+    <p>Brand: {{ car.brand.name }}</p>
+    <p>Price: ${{ car.price }}</p>
+    <p>Mileage: {{ car.mileage }}</p>
+    <p>Description: {{ car.description }}</p>
+    <a href="https://wa.me/{{ car.user.userprofile.phone_number }}" class="btn btn-success">Chat on WhatsApp</a>
+    <a href="{% url 'car_for_sale_edit' car.pk %}" class="btn btn-warning">Edit</a>
+    <form action="{% url 'car_for_sale_delete' car.pk %}" method="post" style="display:inline;">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Delete</button>
+    </form>
+{% endblock %}

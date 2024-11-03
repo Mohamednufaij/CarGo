@@ -1,0 +1,32 @@
+<!-- listings/rent_car_detail.html -->
+{% extends "listings/base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="card shadow">
+        <div class="card-header text-center">
+            <h1>{{ car.name }}</h1>
+        </div>
+        <div class="card-body">
+            {% if car.rent_car_image %}
+                <img src="{{ car.rent_car_image.url }}" alt="{{ car.name }}" class="img-fluid rounded mb-3">
+            {% endif %}
+            
+            <h5 class="card-title">Price per day: ${{ car.price_per_day }}</h5>
+            <p class="card-text"><strong>Description:</strong> {{ car.description }}</p>
+            <p class="card-text"><strong>Location:</strong> {{ car.location }}</p>
+            <p class="card-text"><strong>Contact:</strong> {{ car.contact_info }}</p>
+            
+            <a href="{% url 'rent_car_page' %}" class="btn btn-secondary mt-3">Back to Rental Cars</a>
+
+            {% if user == car.owner %}
+                <a href="{% url 'edit_rental_car' car.pk %}" class="btn btn-warning mt-3">Edit</a>
+                <form action="{% url 'delete_rental_car' car.pk %}" method="post" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger mt-3">Delete</button>
+                </form>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

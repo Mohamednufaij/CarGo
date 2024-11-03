@@ -1,0 +1,38 @@
+{% extends "listings/base.html" %}
+
+{% block content %}
+<div class="container">
+    <h1>Available Cars</h1>
+
+    <!-- Search Form -->
+    <form method="get" action="{% url 'car_list' %}">
+        <div class="row mb-3">
+            <div class="col">
+                <input type="text" name="brand" class="form-control" placeholder="Search by brand">
+            </div>
+            <div class="col">
+                <input type="number" name="price" class="form-control" placeholder="Max price (e.g., 20000)">
+            </div>
+            <div class="col">
+                <button type="submit" class="btn btn-primary">Search</button>
+            </div>
+        </div>
+    </form>
+
+    <h2>Cars for Sale</h2>
+    <ul class="list-group">
+        {% for car in cars_for_sale %}
+        <li class="list-group-item">
+            <a href="{% url 'car_combined_detail' car.pk %}">{{ car.name }}</a> - ${{ car.price }}
+        </li>
+        {% empty %}
+        <li class="list-group-item">No cars match your search criteria.</li>
+        {% endfor %}
+    </ul>
+
+    <div class="mt-4">
+        <a href="{% url 'rent_car_page' %}" class="btn btn-primary float-end">Rent a Car</a>
+    </div>
+    
+</div>
+{% endblock %}

@@ -1,0 +1,52 @@
+{% extends "listings/base.html" %}
+{% load static %}
+{% block content %}
+<div class="container">
+    <h1>{{ user_profile.user.username }}'s Profile</h1>
+    <div class="card mb-3">
+        {% if user_profile.profile_picture %}
+            <img src="{{ user_profile.profile_picture.url }}" class="card-img-top" alt="Profile Picture" style="height: 100px; width: 100px; border-radius: 50%;margin-top: 10px; margin-left: 10px;">
+        {% else %}
+            <img src="{% static 'images/default_profile.png' %}" class="card-img-top" alt="Default Profile Picture">
+        {% endif %}
+        <div class="card-body">
+            <h5 class="card-title">{{ user_profile.name }}</h5>
+            <p class="card-text"><strong>Phone:</strong> {{ user_profile.phone_number }}</p>
+            <p class="card-text"><strong>Location:</strong> {{ user_profile.location }}</p>
+            {% if user_profile.location_link %}
+                <a href="{{ user_profile.location_link }}" target="_blank" class="btn btn-primary mb-3">View Location</a>
+            {% endif %}
+
+            {% if user == user_profile.user %}
+                <a href="{% url 'update_profile' %}" class="btn btn-secondary mb-3">Edit Profile</a>
+                <a href="{% url 'car_sale_create' %}" class="btn btn-primary mb-3">Add New Car for Sale</a>
+                <a href="{% url 'car_rent_create' %}" class="btn btn-primary mb-3">Add New Car for Rent</a>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Display User's Cars for Sale -->
+    <h2 class="mt-4">My Cars for Sale</h2>
+    <ul class="list-group">
+        {% for car in cars_for_sale %}
+        <li class="list-group-item">
+            <a href="{% url 'car_combined_detail' car.pk %}">{{ car.name }}</a> - ${{ car.price }}
+        </li>
+        {% empty %}
+        <li class="list-group-item">No cars listed for sale.</li>
+        {% endfor %}
+    </ul>
+
+    <!-- Display User's Cars for Rent -->
+    <h2 class="mt-4">My Cars for Rent</h2>
+    <ul class="list-group">
+        {% for car in cars_for_rent %}
+        <li class="list-group-item">
+            <a href="{% url 'car_combined_detail' car.pk %}">{{ car.name }}</a> - ${{ car.price_per_day }}/day
+        </li>
+        {% empty %}
+        <li class="list-group-item">No cars listed for rent.</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}

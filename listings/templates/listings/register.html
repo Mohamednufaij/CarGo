@@ -1,0 +1,21 @@
+<!-- listings/templates/registration/register.html -->
+<!-- listings/templates/registration/register.html -->
+{% extends "listings/base.html" %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <h2 class="text-center">Register</h2>
+        <form method="POST" class="form-group">
+            {% csrf_token %}
+            {{ form.as_p }}
+            {{ profile_form.as_p }}
+            <button type="submit" class="btn btn-primary btn-block">Register</button>
+        </form>
+        <p class="text-center">
+            Already have an account? <a href="{% url 'login' %}">Login here</a>.
+        </p>
+    </div>
+</div>
+{% endblock %}
+

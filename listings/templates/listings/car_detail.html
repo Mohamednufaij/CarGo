@@ -1,0 +1,45 @@
+{% extends "listings/base.html" %}
+
+{% block content %}
+<div class="container">
+    <h1>{{ car.name }}</h1>
+    <p>Price: ${{ car.price }}</p>
+    <p>Description: {{ car.description }}</p>
+    <p>Model Year: {{ car.model_year }}</p>
+    <p>Kilometers Driven: {{ car.km_driven }}</p>
+    <p>Brand: {{ car.brand.name }}</p>
+    <p>Oil Type: {{ car.oil_type.type }}</p>
+    <p>Accidental Background: {{ car.accidental_background|yesno:"Yes,No" }}</p>
+    <p>Insurance End Date: {{ car.insurance_end_date }}</p>
+    <p>Ownership Type: {{ car.ownership_type }}</p>
+
+    {% if car.front_image %}
+        <img src="{{ car.front_image.url }}" alt="Front Image" class="img-fluid mb-2">
+    {% endif %}
+    {% if car.leftside_img %}
+        <img src="{{ car.leftside_img.url }}" alt="Left Side Image" class="img-fluid mb-2">
+    {% endif %}
+    {% if car.rightside_img %}
+        <img src="{{ car.rightside_img.url }}" alt="Right Side Image" class="img-fluid mb-2">
+    {% endif %}
+    {% if car.back_image %}
+        <img src="{{ car.back_image.url }}" alt="Back Image" class="img-fluid mb-2">
+    {% endif %}
+
+    {% if car.owner.userprofile %}
+        <a href="{% url 'seller_profile' car.owner.userprofile.id %}" class="btn btn-primary">Seller</a>
+    {% else %}
+        <p>Seller profile not available.</p>
+    {% endif %}
+
+    {% if user == car.owner %}
+        <a href="{% url 'car_combined_edit' car.pk %}" class="btn btn-warning">Edit</a>
+        <form action="{% url 'car_combined_delete' car.pk %}" method="post" style="display:inline;">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">Delete</button>
+        </form>
+    {% endif %}
+</div>
+{% endblock %}
+
+
