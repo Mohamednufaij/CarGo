@@ -152,8 +152,8 @@ class CarForSale(models.Model):
     ownership_type = models.CharField(max_length=50)  # e.g., 1st, 2nd, 3rd owner
     created_date = models.DateField(auto_now_add=True)
     created_time = models.TimeField(auto_now_add=True)
-    is_for_sale = models.BooleanField(default=False)  # New field to mark as for sale
-    is_for_rent = models.BooleanField(default=False)  # New field to mark as for rent
+    is_for_sale = models.BooleanField(default=True)  # New field to mark as for sale
+    is_for_rent = models.BooleanField(default=True)  # New field to mark as for rent
     def __str__(self):
         return f"{self.name} ({self.model_year}) - {self.brand.name}"
 
@@ -168,7 +168,7 @@ class CarForRent(models.Model):
     rent_car_image = models.ImageField(upload_to='media/cars_for_rent/', blank=True, null=True)
     created_date = models.DateField(auto_now_add=True)
     created_time = models.TimeField(auto_now_add=True)
-    is_for_sale = models.BooleanField(default=False)  # New field to mark as for sale
-    is_for_rent = models.BooleanField(default=False)  # New field to mark as for rent
+    is_for_sale = models.BooleanField(default=True)  # New field to mark as for sale
+    is_for_rent = models.BooleanField(default=True)  # New field to mark as for rent
     def __str__(self):
         return f"{self.name} for rent - {self.brand.name}"

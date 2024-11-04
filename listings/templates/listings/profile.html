@@ -42,7 +42,7 @@
     <ul class="list-group">
         {% for car in cars_for_rent %}
         <li class="list-group-item">
-            <a href="{% url 'car_combined_detail' car.pk %}">{{ car.name }}</a> - ${{ car.price_per_day }}/day
+            <a href="{% url 'rent_car_detail' car.pk %}">{{ car.name }}</a> - ${{ car.price_per_day }}/day
         </li>
         {% empty %}
         <li class="list-group-item">No cars listed for rent.</li>

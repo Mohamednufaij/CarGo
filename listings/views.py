@@ -51,15 +51,24 @@ def user_logout(request):
 @login_required
 
 def profile_view(request):
+    user = request.user
     try:
         user_profile = UserProfile.objects.get(user=request.user)
     except UserProfile.DoesNotExist:
         user_profile = None  # Handle the case where the profile does not exist
 
     # Get the user's cars for sale and for rent
-    cars_for_sale = CarForSale.objects.filter(owner=request.user, is_for_sale=True)
-    cars_for_rent = CarForRent.objects.filter(owner=request.user, is_for_rent=True)
-    
+    cars_for_sale = CarForSale.objects.filter(owner=user, is_for_sale=True)
+    cars_for_rent = CarForRent.objects.filter(owner=user, is_for_rent=True)
+    print('*****************')
+    print('*****************')
+    print('*****************')
+    print("User Profile:", user_profile)
+    print("Cars for Sale:", cars_for_sale)
+    print("Cars for Rent:", cars_for_rent)
+    print('*****************')
+    print('*****************')
+    print('*****************')
     return render(request, 'listings/profile.html', {
         'user_profile': user_profile,
         'cars_for_sale': cars_for_sale,
@@ -87,167 +96,6 @@ def update_profile(request):
 def seller_profile_view(request, profile_id):
     user_profile = get_object_or_404(UserProfile, id=profile_id)
     return render(request, 'listings/profile.html', {'user_profile': user_profile})
-# @login_required
-# def car_list(request):
-    
-#     cars = Car.objects.filter(is_available=True)
-#     if 'year' in request.GET:
-#         cars = cars.filter(year=request.GET['year'])
-#     if 'max_price' in request.GET:
-#         cars = cars.filter(price__lte=request.GET['max_price'])
-#     if 'min_price' in request.GET:
-#         cars = cars.filter(price__gte=request.GET['min_price'])
-#     return render(request, 'listings/car_list.html', {'cars': cars})
-
-# @login_required
-# def car_detail(request, pk):
-#     car = get_object_or_404(Car, pk=pk)
-#     return render(request, 'listings/car_detail.html', {'car': car})
-
-# @login_required
-# def car_create(request):
-#     if request.method == "POST":
-#         form = CarForm(request.POST)
-#         if form.is_valid():
-#             car = form.save(commit=False)
-#             car.owner = request.user.userprofile
-#             car.save()
-#             return redirect('car_detail', pk=car.pk)
-#     else:
-#         form = CarForm()
-#     return render(request, 'listings/car_form.html', {'form': form})
-
-# @login_required
-# def car_edit(request, pk):
-#     car = get_object_or_404(Car, pk=pk)
-#     if request.method == "POST":
-#         form = CarForm(request.POST, instance=car)
-#         if form.is_valid():
-#             form.save()
-#             return redirect('car_detail', pk=car.pk)
-#     else:
-#         form = CarForm(instance=car)
-#     return render(request, 'listings/car_form.html', {'form': form})
-
-# @login_required
-# def car_delete(request, pk):
-#     car = get_object_or_404(Car, pk=pk)
-#     if request.method == "POST":
-#         car.delete()
-#         return redirect('car_list')
-#     return render(request, 'listings/car_confirm_delete.html', {'car': car})
-
-
-# @login_required
-# def update_profile(request):
-#     user_profile, created = UserProfile.objects.get_or_create(user=request.user)
-#     if request.method == 'POST':
-#         form = UserProfileForm(request.POST, request.FILES, instance=user_profile)
-#         if form.is_valid():
-#             form.save()
-#             return redirect('profile')  # Redirect to the profile page
-#     else:
-#         form = UserProfileForm(instance=user_profile)
-#     return render(request, 'update_profile.html', {'form': form})
-
-
-# # @login_required
-# # def car_for_sale_list(request):
-# #     cars = CarForSale.objects.all()
-# #     return render(request, 'car_list.html', {'cars': cars})
-
-
-# # # CarForRent Views
-
-# # @login_required
-# # def car_for_rent_list(request):
-# #     cars = CarForRent.objects.all()
-# #     return render(request, 'car_list.html', {'cars': cars})
-# @login_required
-# def car_combined_list(request):
-#     cars_for_sale = CarForSale.objects.all()
-#     cars_for_rent = CarForRent.objects.all()
-#     return render(request, 'listings/car_list.html', {
-#         'cars_for_sale': cars_for_sale,
-#         'cars_for_rent': cars_for_rent,
-#     })
-
-
-# @login_required
-# def car_combined_detail(request, pk):
-#     # Check if the car exists in CarForSale or CarForRent
-#     car_sale = CarForSale.objects.filter(pk=pk).first()
-#     car_rent = CarForRent.objects.filter(pk=pk).first()
-    
-#     if car_sale:
-#         car = car_sale
-#     elif car_rent:
-#         car = car_rent
-#     else:
-#         return redirect('car_combined_list')  # Redirect if not found
-
-#     return render(request, 'listings/car_detail.html', {'car': car})
-
-# @login_required
-# def car_combined_create(request):
-#     car_sale_form = CarForSaleForm()  # Initialize form
-#     car_rent_form = CarForRentForm()  # Initialize form
-
-#     if request.method == "POST":
-#         if 'for_sale' in request.POST:
-#             car_sale_form = CarForSaleForm(request.POST, request.FILES)
-#             if car_sale_form.is_valid():
-#                 car_sale_form.save()
-#                 return redirect('car_combined_list')
-#         elif 'for_rent' in request.POST:
-#             car_rent_form = CarForRentForm(request.POST, request.FILES)
-#             if car_rent_form.is_valid():
-#                 car_rent_form.save()
-#                 return redirect('car_combined_list')
-
-#     return render(request, 'listings/car_form.html', {
-#         'car_sale_form': car_sale_form,
-#         'car_rent_form': car_rent_form,
-#     })
-
-
-# @login_required
-# def car_combined_edit(request, pk):
-#     car_sale = CarForSale.objects.filter(pk=pk).first()
-#     car_rent = CarForRent.objects.filter(pk=pk).first()
-    
-#     if car_sale:
-#         form = CarForSaleForm(request.POST or None, instance=car_sale)
-#         type_of_car = 'sale'
-#     elif car_rent:
-#         form = CarForRentForm(request.POST or None, instance=car_rent)
-#         type_of_car = 'rent'
-#     else:
-#         return redirect('car_combined_list')  # Redirect if not found
-
-#     if request.method == "POST" and form.is_valid():
-#         form.save()
-#         return redirect('car_combined_list')
-    
-#     return render(request, 'listings/car_form.html', {'form': form, 'type_of_car': type_of_car})
-
-# @login_required
-# def car_combined_delete(request, pk):
-#     car_sale = CarForSale.objects.filter(pk=pk).first()
-#     car_rent = CarForRent.objects.filter(pk=pk).first()
-    
-#     if car_sale:
-#         car = car_sale
-#     elif car_rent:
-#         car = car_rent
-#     else:
-#         return redirect('car_combined_list')  # Redirect if not found
-
-#     if request.method == "POST":
-#         car.delete()
-#         return redirect('car_combined_list')
-    
-#     return render(request, 'listings/car_confirm_delete.html', {'car': car})
 
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import CarForSale, CarForRent
