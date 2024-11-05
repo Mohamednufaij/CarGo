@@ -1,59 +1,86 @@
 {% extends "listings/base.html" %}
+{% load static %}
 
 {% block content %}
-<div class="container">
-    <h1>{{ car.name }}</h1>
-    <p>Price: ${{ car.price }}</p>
-    <p>Description: {{ car.description }}</p>
-    <p>Model Year: {{ car.model_year }}</p>
-    <p>Kilometers Driven: {{ car.km_driven }}</p>
-    <p>Brand: {{ car.brand.name }}</p>
-    <p>Oil Type: {{ car.oil_type.type }}</p>
-    <p>Accidental Background: {{ car.accidental_background|yesno:"Yes,No" }}</p>
-    <p>Insurance End Date: {{ car.insurance_end_date }}</p>
-    <p>Ownership Type: {{ car.ownership_type }}</p>
+<div class="container mt-5">
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <h1 class="card-title display-5">{{ car.name }}</h1>
+            <p class="text-muted">Brand: {{ car.brand.name }} | Model Year: {{ car.model_year }}</p>
+            <h3 class="text-primary">Price: ${{ car.price }}</h3>
+            <p>{{ car.description }}</p>
 
-    {% if car.front_image %}
-        <img src="{{ car.front_image.url }}" alt="Front Image" class="img-fluid mb-2">
-    {% endif %}
-    {% if car.leftside_img %}
-        <img src="{{ car.leftside_img.url }}" alt="Left Side Image" class="img-fluid mb-2">
-    {% endif %}
-    {% if car.rightside_img %}
-        <img src="{{ car.rightside_img.url }}" alt="Right Side Image" class="img-fluid mb-2">
-    {% endif %}
-    {% if car.back_image %}
-        <img src="{{ car.back_image.url }}" alt="Back Image" class="img-fluid mb-2">
-    {% endif %}
+            <div class="row">
+                <div class="col-md-6">
+                    <ul class="list-unstyled">
+                        <li><strong>Kilometers Driven:</strong> {{ car.km_driven }} km</li>
+                        <li><strong>Oil Type:</strong> {{ car.oil_type.type }}</li>
+                        <li><strong>Accidental Background:</strong> {{ car.accidental_background|yesno:"Yes,No" }}</li>
+                        <li><strong>Insurance End Date:</strong> {{ car.insurance_end_date }}</li>
+                        <li><strong>Ownership Type:</strong> {{ car.ownership_type }}</li>
+                    </ul>
+                </div>
+                
+                <!-- Image Gallery -->
+                <div class="col-md-6">
+                    <div class="row g-2">
+                        {% if car.front_image %}
+                            <div class="col-6">
+                                <img src="{{ car.front_image.url }}" class="img-fluid rounded" alt="Front Image">
+                            </div>
+                        {% endif %}
+                        {% if car.leftside_img %}
+                            <div class="col-6">
+                                <img src="{{ car.leftside_img.url }}" class="img-fluid rounded" alt="Left Side Image">
+                            </div>
+                        {% endif %}
+                        {% if car.rightside_img %}
+                            <div class="col-6">
+                                <img src="{{ car.rightside_img.url }}" class="img-fluid rounded" alt="Right Side Image">
+                            </div>
+                        {% endif %}
+                        {% if car.back_image %}
+                            <div class="col-6">
+                                <img src="{{ car.back_image.url }}" class="img-fluid rounded" alt="Back Image">
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
 
-    {% if user_profile.location_link %}
-                <a href="{{ user_profile.location_link }}" target="_blank" class="btn btn-primary mb-3">View Location</a>
-    {% endif %}
+            <!-- Action Buttons -->
+            <div class="mt-4">
+                {% if user_profile.location_link %}
+                    <a href="{{ user_profile.location_link }}" target="_blank" class="btn btn-outline-primary me-2">
+                        <i class="fas fa-map-marker-alt"></i> View Location
+                    </a>
+                {% endif %}
 
-    <a href="https://wa.me/?text=I'm%20interested%20in%20the%20{{ car.name }}%20listed%20for%20${{ car.price }}" 
-       class="btn btn-success" target="_blank">
-        <i class="fab fa-whatsapp"></i> Contact on WhatsApp
-    </a>
-    
-    <!-- mParivahan Verification Button -->
-    <a href="https://parivahan.gov.in/parivahan/" class="btn btn-info" target="_blank">
-        <i class="fas fa-car"></i> Verify with mParivahan
-    </a>
+                <a href="https://wa.me/?text=I'm%20interested%20in%20the%20{{ car.name }}%20listed%20for%20${{ car.price }}" 
+                   class="btn btn-success me-2" target="_blank">
+                    <i class="fab fa-whatsapp"></i> Contact on WhatsApp
+                </a>
 
-    {% if car.owner.userprofile %}
-        <a href="{% url 'seller_profile' car.owner.userprofile.id %}" class="btn btn-primary">Seller</a>
-    {% else %}
-        <p>Seller profile not available.</p>
-    {% endif %}
+                <a href="https://parivahan.gov.in/parivahan/" class="btn btn-info me-2" target="_blank">
+                    <i class="fas fa-car"></i> Verify with mParivahan
+                </a>
 
-    {% if user == car.owner %}
-        <a href="{% url 'car_combined_edit' car.pk %}" class="btn btn-warning">Edit</a>
-        <form action="{% url 'car_combined_delete' car.pk %}" method="post" style="display:inline;">
-            {% csrf_token %}
-            <button type="submit" class="btn btn-danger">Delete</button>
-        </form>
-    {% endif %}
+                {% if car.owner.userprofile %}
+                    <a href="{% url 'seller_profile' car.owner.userprofile.id %}" class="btn btn-primary me-2">Seller Profile</a>
+                {% else %}
+                    <span class="text-danger">Seller profile not available.</span>
+                {% endif %}
+
+                {% if user == car.owner %}
+                    <a href="{% url 'car_combined_edit' car.pk %}" class="btn btn-warning me-2">Edit</a>
+                    <form action="{% url 'car_combined_delete' car.pk %}" method="post" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
+                {% endif %}
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}
-
 

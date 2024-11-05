@@ -6,8 +6,8 @@
 
     <!-- Search Form -->
     <form method="get" action="{% url 'car_list' %}">
-        <div class="row mb-3">
-            <div class="col">
+        <div class="row g-3 align-items-center">
+            <div class="col-md-3">
                 <input type="text" name="name" class="form-control" placeholder="Search by Car Name">
             </div>
             <div class="col">
@@ -55,23 +55,23 @@
                     <option value="100001">Above 100,000</option>
                 </select>
             </div>
-            <div class="col">
-                <button type="submit" class="btn btn-primary">Filter</button>
+            <div class="col-md-1">
+                <button type="submit" class="btn btn-primary w-100">Filter</button>
             </div>
-            <div class="col">
-                <a href="{% url 'rent_car_page' %}" class="btn btn-primary float-end">Rent a Car</a>
+            <div class="col-md-2">
+                <a href="{% url 'rent_car_page' %}" class="btn btn-secondary w-100">Rent a Car</a>
             </div>
         </div>
     </form>
     
 
-    <h2>Cars for Sale</h2>
+    <h2 id="heading">Cars for Sale</h2>
     <div class="row">
         {% for car in cars_for_sale %}
             <div class="col-md-4 mb-4">
                 <div class="card">
                     {% if car.front_image %}
-                        <img src="{{ car.front_image.url }}" class="card-img-top" alt="{{ car.name }}" style="margin-left: 70px; margin-top: 5px;">
+                        <img src="{{ car.front_image.url }}" class="card-img-top" alt="{{ car.name }}" style="margin-left: 25px; margin-top: 5px;">
                     
                     {% endif %}
                     <div class="card-body">

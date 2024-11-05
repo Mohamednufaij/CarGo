@@ -1,46 +1,59 @@
-<!-- listings/rent_car_detail.html -->
 {% extends "listings/base.html" %}
 
 {% block content %}
 <div class="container mt-5">
-    <div class="card shadow">
-        <div class="card-header text-center">
-            <h1>{{ car.name }}</h1>
+    <div class="card shadow-lg">
+        <!-- Card Header with Car Name -->
+        <div class="card-header text-center bg-primary text-white">
+            <h1 class="display-5">{{ car.name }}</h1>
         </div>
+        
+        <!-- Card Body with Car Details -->
         <div class="card-body">
+            <!-- Car Image -->
             {% if car.rent_car_image %}
-                <img src="{{ car.rent_car_image.url }}" alt="{{ car.name }}" class="img-fluid rounded mb-3">
+                <img src="{{ car.rent_car_image.url }}" alt="{{ car.name }}" class="img-fluid rounded mb-3 w-100">
             {% endif %}
             
-            <h5 class="card-title">Price per day: ${{ car.price_per_day }}</h5>
+            <!-- Car Price and Description -->
+            <h5 class="card-title text-secondary">Price per Day: <span class="text-dark">${{ car.price_per_day }}</span></h5>
             <p class="card-text"><strong>Description:</strong> {{ car.description }}</p>
-            <p class="card-text"><strong>Location:</strong> {{ car.location }}</p>
-            <p class="card-text"><strong>Contact:</strong> {{ car.contact_info }}</p>
+            <!-- <p class="card-text"><strong>Location:</strong> {{ car.location }}</p>
+            <p class="card-text"><strong>Contact:</strong> {{ car.contact_info }}</p> -->
             
-            <a href="https://wa.me/?text=I'm%20interested%20in%20the%20{{ car.name }}%20listed%20for%20${{ car.price }}" 
-         class="btn btn-success mt-3" target="_blank">
-        <i class="fab fa-whatsapp"></i> Contact on WhatsApp
-        </a>
+            <!-- Action Buttons -->
+            <div class="mt-4">
+                <a href="https://wa.me/?text=I'm%20interested%20in%20the%20{{ car.name }}%20listed%20for%20${{ car.price_per_day }}" 
+                   class="btn btn-success me-2" target="_blank">
+                    <i class="fab fa-whatsapp"></i> Contact on WhatsApp
+                </a>
 
-        <!-- mParivahan Verification Button -->
-        <a href="https://parivahan.gov.in/parivahan/" class="btn btn-info mt-3" target="_blank">
-            <i class="fas fa-car"></i> Verify with mParivahan
-        </a>
-        {% if car.owner.userprofile %}
-        <a href="{% url 'seller_profile' car.owner.userprofile.id %}" class="btn btn-primary mt-3">Seller</a>
-    {% else %}
-        <p>Seller profile not available.</p>
-    {% endif %}
-            <a href="{% url 'rent_car_page' %}" class="btn btn-secondary mt-3">Back to Rental Cars</a>
+                <!-- mParivahan Verification Button -->
+                <a href="https://parivahan.gov.in/parivahan/" class="btn btn-info me-2" target="_blank">
+                    <i class="fas fa-car"></i> Verify with mParivahan
+                </a>
 
-            {% if user == car.owner %}
-                <a href="{% url 'edit_rental_car' car.pk %}" class="btn btn-warning mt-3">Edit</a>
-                <form action="{% url 'delete_rental_car' car.pk %}" method="post" style="display:inline;">
-                    {% csrf_token %}
-                    <button type="submit" class="btn btn-danger mt-3">Delete</button>
-                </form>
-            {% endif %}
+                <!-- Link to Seller Profile -->
+                {% if car.owner.userprofile %}
+                    <a href="{% url 'seller_profile' car.owner.userprofile.id %}" class="btn btn-primary me-2">Seller Profile</a>
+                {% else %}
+                    <span class="text-danger">Seller profile not available.</span>
+                {% endif %}
+
+                <!-- Back to Rental Cars Button -->
+                <a href="{% url 'rent_car_page' %}" class="btn btn-secondary mt-3">Back to Rental Cars</a>
+
+                <!-- Edit and Delete Buttons for Car Owner -->
+                {% if user == car.owner %}
+                    <a href="{% url 'edit_rental_car' car.pk %}" class="btn btn-warning mt-3 me-2">Edit</a>
+                    <form action="{% url 'delete_rental_car' car.pk %}" method="post" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger mt-3">Delete</button>
+                    </form>
+                {% endif %}
+            </div>
         </div>
     </div>
 </div>
 {% endblock %}
+

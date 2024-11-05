@@ -160,7 +160,9 @@ def update_profile(request):
 
     return render(request, 'listings/update_profile.html', {'form': form})
 def seller_profile_view(request, profile_id):
+    
     user_profile = get_object_or_404(UserProfile, id=profile_id)
+    
     return render(request, 'listings/profile.html', {'user_profile': user_profile})
 
 from django.shortcuts import render, get_object_or_404, redirect

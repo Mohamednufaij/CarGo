@@ -1,52 +1,85 @@
 {% extends "listings/base.html" %}
 {% load static %}
 {% block content %}
-<div class="container">
-    <h1>{{ user_profile.user.username }}'s Profile</h1>
-    <div class="card mb-3">
-        {% if user_profile.profile_picture %}
-            <img src="{{ user_profile.profile_picture.url }}" class="card-img-top" alt="Profile Picture" style="height: 100px; width: 100px; border-radius: 50%;margin-top: 10px; margin-left: 10px;">
-        {% else %}
-            <img src="{% static 'images/default_profile.png' %}" class="card-img-top" alt="Default Profile Picture">
-        {% endif %}
-        <div class="card-body">
-            <h5 class="card-title">{{ user_profile.name }}</h5>
-            <p class="card-text"><strong>Phone:</strong> {{ user_profile.phone_number }}</p>
-            <p class="card-text"><strong>Location:</strong> {{ user_profile.location }}</p>
-            {% if user_profile.location_link %}
-                <a href="{{ user_profile.location_link }}" target="_blank" class="btn btn-primary mb-3">View Location</a>
-            {% endif %}
+<div class="container mt-5">
+    <div class="text-center mb-4">
+        <h1>{{ user_profile.user.username }}'s Profile</h1>
+    </div>
 
+    <!-- Profile Card -->
+    <div class="card shadow-sm p-3 mb-5 bg-white rounded">
+        <div class="d-flex align-items-center">
+            {% if user_profile.profile_picture %}
+                <img src="{{ user_profile.profile_picture.url }}" alt="Profile Picture" class="rounded-circle" style="height: 120px; width: 120px; margin-right: 20px;">
+            {% else %}
+                <img src="{% static 'images/default_profile.png' %}" alt="Default Profile Picture" class="rounded-circle" style="height: 120px; width: 120px; margin-right: 20px;">
+            {% endif %}
+            <div>
+                <h3 class="card-title">{{ user_profile.name }}</h3>
+                <p class="card-text mb-1"><strong>Phone:</strong> {{ user_profile.phone_number }}</p>
+                <p class="card-text mb-1"><strong>Location:</strong> {{ user_profile.location }}</p>
+                {% if user_profile.location_link %}
+                    <a href="{{ user_profile.location_link }}" target="_blank" class="btn btn-outline-primary btn-sm">View Location</a>
+                {% endif %}
+            </div>
+        </div>
+        <div class="card-body">
             {% if user == user_profile.user %}
-                <a href="{% url 'update_profile' %}" class="btn btn-secondary mb-3">Edit Profile</a>
-                <a href="{% url 'car_sale_create' %}" class="btn btn-primary mb-3">Add New Car for Sale</a>
-                <a href="{% url 'car_rent_create' %}" class="btn btn-primary mb-3">Add New Car for Rent</a>
+                <a href="{% url 'update_profile' %}" class="btn btn-secondary me-2" id="edit">Edit Profile</a>
+                <a href="{% url 'car_sale_create' %}" class="btn btn-success me-2">Add New Car for Sale</a>
+                <a href="{% url 'car_rent_create' %}" class="btn btn-info">Add New Car for Rent</a>
             {% endif %}
         </div>
     </div>
 
     <!-- Display User's Cars for Sale -->
-    <h2 class="mt-4">My Cars for Sale</h2>
-    <ul class="list-group">
-        {% for car in cars_for_sale %}
-        <li class="list-group-item">
-            <a href="{% url 'car_combined_detail' car.pk %}">{{ car.name }}</a> - ${{ car.price }}
-        </li>
-        {% empty %}
-        <li class="list-group-item">No cars listed for sale.</li>
-        {% endfor %}
-    </ul>
+    <div class="mt-5">
+        <h2>My Cars for Sale</h2>
+        <div class="row">
+            {% for car in cars_for_sale %}
+            <div class="col-md-4 mb-4">
+                <div class="card shadow-sm h-100">
+                    {% if car.front_image %}
+                        <img src="{{ car.front_image.url }}" class="card-img-top" alt="{{ car.name }}" style="height: 200px; object-fit: cover; margin-left: 25px;">
+                    {% else %}
+                        <img src="{% static 'images/default_car.png' %}" class="card-img-top" alt="Default Car Image" style="height: 200px; object-fit: cover;">
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title">{{ car.name }}</h5>
+                        <p class="card-text">$ {{ car.price }}</p>
+                        <a href="{% url 'car_combined_detail' car.pk %}" class="btn btn-primary">View Details</a>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <p class="text-center">No cars listed for sale.</p>
+            {% endfor %}
+        </div>
+    </div>
 
     <!-- Display User's Cars for Rent -->
-    <h2 class="mt-4">My Cars for Rent</h2>
-    <ul class="list-group">
-        {% for car in cars_for_rent %}
-        <li class="list-group-item">
-            <a href="{% url 'rent_car_detail' car.pk %}">{{ car.name }}</a> - ${{ car.price_per_day }}/day
-        </li>
-        {% empty %}
-        <li class="list-group-item">No cars listed for rent.</li>
-        {% endfor %}
-    </ul>
+    <div class="mt-5">
+        <h2>My Cars for Rent</h2>
+        <div class="row">
+            {% for car in cars_for_rent %}
+            <div class="col-md-4 mb-4">
+                <div class="card shadow-sm h-100">
+                    {% if car.rent_car_image %}
+                        <img src="{{ car.rent_car_image.url }}" class="card-img-top" alt="{{ car.name }}" style="height: 200px; object-fit: cover; margin-left: 25px;">
+                    {% else %}
+                        <img src="{% static 'images/default_car.png' %}" class="card-img-top" alt="Default Car Image" style="height: 200px; object-fit: cover;">
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title">{{ car.name }}</h5>
+                        <p class="card-text">$ {{ car.price_per_day }} / day</p>
+                        <a href="{% url 'rent_car_detail' car.pk %}" class="btn btn-primary">View Details</a>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <p class="text-center">No cars listed for rent.</p>
+            {% endfor %}
+        </div>
+    </div>
 </div>
 {% endblock %}
