@@ -1,4 +1,7 @@
 /* styles.css */
+*{
+    background-color: black;
+}
 body {
     background-color: #f9f9f9;
 }
@@ -15,4 +18,7 @@ body {
 }
 #WhatsApp{
  color: green;
+}
+.container{
+    background-color: aqua;
 }

@@ -60,19 +60,85 @@ def profile_view(request):
     # Get the user's cars for sale and for rent
     cars_for_sale = CarForSale.objects.filter(owner=user, is_for_sale=True)
     cars_for_rent = CarForRent.objects.filter(owner=user, is_for_rent=True)
-    print('*****************')
-    print('*****************')
-    print('*****************')
-    print("User Profile:", user_profile)
-    print("Cars for Sale:", cars_for_sale)
-    print("Cars for Rent:", cars_for_rent)
-    print('*****************')
-    print('*****************')
-    print('*****************')
+    # print('*****************')
+    # print('*****************')
+    # print('*****************')
+    # print("User Profile:", user_profile)
+    # print("Cars for Sale:", cars_for_sale)
+    # print("Cars for Rent:", cars_for_rent)
+    # print('*****************')
+    # print('*****************')
+    # print('*****************')
     return render(request, 'listings/profile.html', {
         'user_profile': user_profile,
         'cars_for_sale': cars_for_sale,
         'cars_for_rent': cars_for_rent,
+    })
+   
+
+def car_list(request):
+    # Get filter values from the request
+    name_query = request.GET.get('name', '')
+    brand_query = request.GET.get('brand', '')
+    year_query = request.GET.get('year', '')
+    km_query = request.GET.get('km', '')
+    oil_type_query = request.GET.get('oil_type', '')
+    price_query = request.GET.get('price', '')
+
+    # Start with all cars for sale
+    cars_for_sale = CarForSale.objects.all()
+
+    # Apply filters if values are provided
+    if name_query:
+        cars_for_sale = cars_for_sale.filter(name__icontains=name_query)
+    
+    if brand_query:
+        cars_for_sale = cars_for_sale.filter(brand__name=brand_query)
+    
+    if year_query:
+        cars_for_sale = cars_for_sale.filter(model_year=year_query)
+    
+    if km_query:
+        try:
+            km = int(km_query)
+            if km == 200001:
+                cars_for_sale = cars_for_sale.filter(km_driven__gt=200000)
+            else:
+                cars_for_sale = cars_for_sale.filter(km_driven__lte=km)
+        except ValueError:
+            pass  # Ignore invalid input
+
+    if oil_type_query:
+        cars_for_sale = cars_for_sale.filter(oil_type__type=oil_type_query)
+    
+    if price_query:
+        try:
+            price = int(price_query)
+            if price == 100001:
+                cars_for_sale = cars_for_sale.filter(price__gt=100000)
+            else:
+                cars_for_sale = cars_for_sale.filter(price__lte=price)
+        except ValueError:
+            pass  # Ignore invalid input
+
+    # Fetch all cars for rent without filtering
+    cars_for_rent = CarForRent.objects.all()
+
+    # Fetch choices for dropdown filters
+    brands = Brand.objects.all()
+    years = CarForSale.objects.values_list('model_year', flat=True).distinct().order_by('-model_year')
+    oil_types = OilType.objects.all()
+    print('***************')
+    print('***************')
+    print(brands,years,oil_types)
+    print('***************')
+    print('***************')
+    return render(request, 'listings/car_list.html', {
+        'cars_for_sale': cars_for_sale,
+        'cars_for_rent': cars_for_rent,
+        'brands': brands,
+        'years': years,
+        'oil_types': oil_types,
     })
 
 
@@ -104,31 +170,31 @@ from .forms import CarForSaleForm, CarForRentForm
 from django.shortcuts import render
 from .models import CarForSale, CarForRent
 
-def car_list(request):
-    brand_query = request.GET.get('brand', '')
-    price_query = request.GET.get('price', '')
+# def car_list(request):
+#     brand_query = request.GET.get('brand', '')
+#     price_query = request.GET.get('price', '')
 
-    # Filter cars for sale based on search criteria
-    cars_for_sale = CarForSale.objects.all()
+#     # Filter cars for sale based on search criteria
+#     cars_for_sale = CarForSale.objects.all()
     
-    if brand_query:
-        # Adjust 'name' based on the field in the Brand model that stores the brand name
-        cars_for_sale = cars_for_sale.filter(brand__name__icontains=brand_query)
+#     if brand_query:
+#         # Adjust 'name' based on the field in the Brand model that stores the brand name
+#         cars_for_sale = cars_for_sale.filter(brand__name__icontains=brand_query)
     
-    if price_query:
-        try:
-            price = float(price_query)  # Using float to match DecimalField
-            cars_for_sale = cars_for_sale.filter(price__lte=price)
-        except ValueError:
-            pass  # Ignore invalid price input
+#     if price_query:
+#         try:
+#             price = float(price_query)  # Using float to match DecimalField
+#             cars_for_sale = cars_for_sale.filter(price__lte=price)
+#         except ValueError:
+#             pass  # Ignore invalid price input
 
-    # Fetch all cars for rent without filtering
-    cars_for_rent = CarForRent.objects.all()
+#     # Fetch all cars for rent without filtering
+#     cars_for_rent = CarForRent.objects.all()
 
-    return render(request, 'listings/car_list.html', {
-        'cars_for_sale': cars_for_sale,
-        'cars_for_rent': cars_for_rent,
-    })
+#     return render(request, 'listings/car_list.html', {
+#         'cars_for_sale': cars_for_sale,
+#         'cars_for_rent': cars_for_rent,
+#     })
 @login_required
 def car_combined_detail(request, pk):
     # Try to get the car from CarForSale, and if not found, try CarForRent
