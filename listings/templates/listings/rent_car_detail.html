@@ -18,20 +18,20 @@
             <!-- Car Price and Description -->
             <h5 class="card-title text-secondary">Price per Day: <span class="text-dark">${{ car.price_per_day }}</span></h5>
             <p class="card-text"><strong>Description:</strong> {{ car.description }}</p>
-            <!-- <p class="card-text"><strong>Location:</strong> {{ car.location }}</p>
-            <p class="card-text"><strong>Contact:</strong> {{ car.contact_info }}</p> -->
             
             <!-- Action Buttons -->
             <div class="mt-4">
-                <a href="https://wa.me/?text=I'm%20interested%20in%20the%20{{ car.name }}%20listed%20for%20${{ car.price_per_day }}" 
-                   class="btn btn-success me-2" target="_blank">
-                    <i class="fab fa-whatsapp"></i> Contact on WhatsApp
-                </a>
+                {% if user != car.owner %}
+                    <!-- WhatsApp and mParivahan Buttons for Other Users -->
+                    <a href="https://wa.me/?text=I'm%20interested%20in%20the%20{{ car.name }}%20listed%20for%20${{ car.price_per_day }}" 
+                       class="btn btn-success me-2" target="_blank">
+                        <i class="fab fa-whatsapp"></i> Contact on WhatsApp
+                    </a>
 
-                <!-- mParivahan Verification Button -->
-                <a href="https://parivahan.gov.in/parivahan/" class="btn btn-info me-2" target="_blank">
-                    <i class="fas fa-car"></i> Verify with mParivahan
-                </a>
+                    <a href="https://parivahan.gov.in/parivahan/" class="btn btn-info me-2" target="_blank">
+                        <i class="fas fa-car"></i> Verify with mParivahan
+                    </a>
+                {% endif %}
 
                 <!-- Link to Seller Profile -->
                 {% if car.owner.userprofile %}

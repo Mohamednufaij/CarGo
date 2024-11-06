@@ -2,19 +2,17 @@
 
 {% block content %}
 <div class="container">
-    <!-- <h1>Available Cars</h1> -->
-
     <!-- Search Form -->
     <form method="get" action="{% url 'car_list' %}">
         <div class="row g-3 align-items-center">
             <div class="col-md-3">
-                <input type="text" name="name" class="form-control" placeholder="Search by Car Name">
+                <input type="text" name="name" class="form-control" placeholder="Search by Car Name" value="{{ request.GET.name }}">
             </div>
             <div class="col">
                 <select name="brand" class="form-select">
                     <option value="">All Brands</option>
                     {% for brand in brands %}
-                        <option value="{{ brand.name }}">{{ brand.name }}</option>
+                        <option value="{{ brand.name }}" {% if request.GET.brand == brand.name %}selected{% endif %}>{{ brand.name }}</option>
                     {% endfor %}
                 </select>
             </div>
@@ -22,37 +20,37 @@
                 <select name="year" class="form-select">
                     <option value="">All Years</option>
                     {% for year in years %}
-                        <option value="{{ year }}">{{ year }}</option>
+                        <option value="{{ year }}" {% if request.GET.year == year|stringformat:"s" %}selected{% endif %}>{{ year }}</option>
                     {% endfor %}
                 </select>
             </div>
             <div class="col">
                 <select name="km" class="form-select">
                     <option value="">All KM</option>
-                    <option value="50000">Up to 50,000</option>
-                    <option value="100000">Up to 100,000</option>
-                    <option value="150000">Up to 150,000</option>
-                    <option value="200000">Up to 200,000</option>
-                    <option value="200001">Above 200,000</option>
+                    <option value="50000" {% if request.GET.km == "50000" %}selected{% endif %}>Up to 50,000</option>
+                    <option value="100000" {% if request.GET.km == "100000" %}selected{% endif %}>Up to 100,000</option>
+                    <option value="150000" {% if request.GET.km == "150000" %}selected{% endif %}>Up to 150,000</option>
+                    <option value="200000" {% if request.GET.km == "200000" %}selected{% endif %}>Up to 200,000</option>
+                    <option value="200001" {% if request.GET.km == "200001" %}selected{% endif %}>Above 200,000</option>
                 </select>
             </div>
             <div class="col">
                 <select name="oil_type" class="form-select">
                     <option value="">All Oil Types</option>
                     {% for oil in oil_types %}
-                        <option value="{{ oil.type }}">{{ oil.type }}</option>
+                        <option value="{{ oil.type }}" {% if request.GET.oil_type == oil.type %}selected{% endif %}>{{ oil.type }}</option>
                     {% endfor %}
                 </select>
             </div>
             <div class="col">
                 <select name="price" class="form-select">
                     <option value="">All Prices</option>
-                    <option value="5000">Up to 5,000</option>
-                    <option value="10000">Up to 10,000</option>
-                    <option value="20000">Up to 20,000</option>
-                    <option value="50000">Up to 50,000</option>
-                    <option value="100000">Up to 100,000</option>
-                    <option value="100001">Above 100,000</option>
+                    <option value="5000" {% if request.GET.price == "5000" %}selected{% endif %}>Up to 5,000</option>
+                    <option value="10000" {% if request.GET.price == "10000" %}selected{% endif %}>Up to 10,000</option>
+                    <option value="20000" {% if request.GET.price == "20000" %}selected{% endif %}>Up to 20,000</option>
+                    <option value="50000" {% if request.GET.price == "50000" %}selected{% endif %}>Up to 50,000</option>
+                    <option value="100000" {% if request.GET.price == "100000" %}selected{% endif %}>Up to 100,000</option>
+                    <option value="100001" {% if request.GET.price == "100001" %}selected{% endif %}>Above 100,000</option>
                 </select>
             </div>
             <div class="col-md-1">
